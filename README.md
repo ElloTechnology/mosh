@@ -172,6 +172,42 @@ MacOS:
 $ brew install protobuf automake
 ```
 
+### Apple Silicon faint-rendition build
+
+The shared `ello/faint` branch in
+[`ElloTechnology/mosh`](https://github.com/ElloTechnology/mosh) includes
+support for the SGR 2 faint rendition. To build it on Apple Silicon macOS:
+
+```
+$ git clone git@github.com:ElloTechnology/mosh.git
+$ cd mosh
+$ git switch --track origin/ello/faint
+$ brew install autoconf automake protobuf pkgconf openssl@3 ncurses
+$ ./autogen.sh
+$ ./configure --prefix="$HOME/.local/opt/mosh-faint"
+$ make -j"$(sysctl -n hw.ncpu)"
+$ make check
+$ make install
+```
+
+`make check` uses timing-sensitive interactive tests, so run it without
+parallel jobs. To select the new build without changing system binaries:
+
+```
+$ mkdir -p "$HOME/.local/bin"
+$ ln -s "$HOME/.local/opt/mosh-faint/bin/mosh" "$HOME/.local/bin/mosh"
+$ ln -s "$HOME/.local/opt/mosh-faint/bin/mosh-client" "$HOME/.local/bin/mosh-client"
+$ ln -s "$HOME/.local/opt/mosh-faint/bin/mosh-server" "$HOME/.local/bin/mosh-server"
+$ export PATH="$HOME/.local/bin:$PATH"
+$ rehash
+```
+
+For persistence, add the `PATH` setting to your shell configuration. Both the
+client and server must use this build, then start a new Mosh session. If SSH
+starts with a PATH that cannot find the installed server, pass its stable
+absolute path using the server's username and home directory, for example
+`--server=/Users/REMOTE_USER/.local/opt/mosh-faint/bin/mosh-server`.
+
 Once you have forked the repository, run the following to build and test Mosh:
 
 ```
