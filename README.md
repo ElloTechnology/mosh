@@ -195,15 +195,18 @@ parallel jobs. To select the new build without changing system binaries:
 
 ```
 $ mkdir -p "$HOME/.local/bin"
-$ ln -sf "$HOME/.local/opt/mosh-faint/bin/mosh" "$HOME/.local/bin/mosh"
-$ ln -sf "$HOME/.local/opt/mosh-faint/bin/mosh-client" "$HOME/.local/bin/mosh-client"
-$ ln -sf "$HOME/.local/opt/mosh-faint/bin/mosh-server" "$HOME/.local/bin/mosh-server"
+$ ln -s "$HOME/.local/opt/mosh-faint/bin/mosh" "$HOME/.local/bin/mosh"
+$ ln -s "$HOME/.local/opt/mosh-faint/bin/mosh-client" "$HOME/.local/bin/mosh-client"
+$ ln -s "$HOME/.local/opt/mosh-faint/bin/mosh-server" "$HOME/.local/bin/mosh-server"
+$ export PATH="$HOME/.local/bin:$PATH"
+$ rehash
 ```
 
-Ensure `$HOME/.local/bin` precedes system paths. Both the client and server
-must use this build, then start a new Mosh session. If SSH starts with a PATH
-that cannot find the installed server, pass its stable absolute path, for
-example `--server="$HOME/.local/opt/mosh-faint/bin/mosh-server"`.
+For persistence, add the `PATH` setting to your shell configuration. Both the
+client and server must use this build, then start a new Mosh session. If SSH
+starts with a PATH that cannot find the installed server, pass its stable
+absolute path using the server's username and home directory, for example
+`--server=/Users/REMOTE_USER/.local/opt/mosh-faint/bin/mosh-server`.
 
 Once you have forked the repository, run the following to build and test Mosh:
 
